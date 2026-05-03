@@ -4,17 +4,77 @@
 #include "stb_image.h"
 
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
 
 int SRC_WIDTH = 800;
 int SRC_HEIGHT = 600;
 
+
+float vertices[] = {
+    -0.5f, -0.5f, 0.0f,
+     0.5f, -0.5f, 0.0f,
+    -0.5f, -0.5f, 0.0f,
+     0.5f,  0.5f, 0.0f
+};
+
+unsigned int indices[]= {
+  0, 1, 3,
+  1, 2, 3
+};
 void processInput(bool &shouldClose) {
   const Uint8 *keystate = SDL_GetKeyboardState(nullptr);
   if (keystate[SDL_SCANCODE_ESCAPE]) {
     shouldClose = true;
   }
 }
+
+std::string loadShaderSrc(std::string path){
+  std::ifstream file(path);
+
+  std::stringstream buffer;
+  buffer << file.rdbuf();
+  return buffer.str();
+}
+
+unsigned int compileShader(GLenum type, std::string source, std::string name){
+  unsigned int shader = glCreateShader(type);
+  const char* src = source.c_str();
+  glShaderSource(shader, 1, &src, NULL);
+  glCompileShader(shader);
+
+  int success;
+  char infoLog[512];
+  glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+
+  return shader;
+}
+
+unsigned int createShaderProgram(std::string vertexPath, std::string fragmentPath)
+{
+    std::string vertexSource = loadShaderSrc(vertexPath);
+    std::string fragmentSource = loadShaderSrc(fragmentPath);
+
+    unsigned int vertexShader = compileShader(GL_VERTEX_SHADER, vertexSource, "VERTEX");
+    unsigned int fragmentShader = compileShader(GL_FRAGMENT_SHADER, fragmentSource, "FRAGMENT");
+
+    unsigned int program = glCreateProgram();
+    glAttachShader(program, vertexShader);
+    glAttachShader(program, fragmentShader);
+    glLinkProgram(program);
+
+    int success;
+    char infoLog[512];
+    glGetProgramiv(program, GL_LINK_STATUS, &success);
+
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
+    return program;
+}
+
 int main(int argc, char *argv[]) {
+  SDL_Init(SDL_INIT_VIDEO);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -32,6 +92,29 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
+  unsigned int shaderProgram = createShaderProgram("shaders/triangle.vert","shaders/triangle.frag");
+
+  unsigned int VBO;
+  unsigned int VAO;
+  unsigned int EBO;
+
+  glGenVertexArrays(1,&VAO);
+  glGenBuffers(1, &VBO);
+  glGenBuffers(1, &EBO);
+
+  glBindVertexArray(VAO);
+
+  glBindBuffer(GL_ARRAY_BUFFER, VBO);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+  glVertexAttribPointer(0,3,GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*) 0);
+  glEnableVertexAttribArray(0);
+
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindVertexArray(0);
   bool close = false;
 
   while (!close) {
@@ -49,6 +132,11 @@ int main(int argc, char *argv[]) {
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+
+    glUseProgram(shaderProgram);
+    glBindVertexArray(VAO);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
     SDL_GL_SwapWindow(window);
   }
 
