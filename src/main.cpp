@@ -7,17 +7,17 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <cmath>
 
 int SRC_WIDTH = 800;
 int SRC_HEIGHT = 600;
 
 
 float vertices[] = {
-    -0.5f, -0.5f, 0.0f,
-     0.5f, -0.5f, 0.0f,
-    -0.5f, -0.5f, 0.0f,
-     0.5f,  0.5f, 0.0f
-};
+     0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   
+    -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   
+     0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f   
+}; 
 
 unsigned int indices[]= {
   0, 1, 3,
@@ -96,22 +96,20 @@ int main(int argc, char *argv[]) {
 
   unsigned int VBO;
   unsigned int VAO;
-  unsigned int EBO;
 
   glGenVertexArrays(1,&VAO);
   glGenBuffers(1, &VBO);
-  glGenBuffers(1, &EBO);
 
   glBindVertexArray(VAO);
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-  glVertexAttribPointer(0,3,GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*) 0);
+  glVertexAttribPointer(0,3,GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*) 0);
   glEnableVertexAttribArray(0);
+
+  glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+  glEnableVertexAttribArray(1);
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
@@ -134,8 +132,21 @@ int main(int argc, char *argv[]) {
     glClear(GL_COLOR_BUFFER_BIT);
 
     glUseProgram(shaderProgram);
+
+    float timeValue = SDL_GetTicks() / 1000.0f;
+    float greenValue = std::sin(timeValue) / 2.0f + 0.5f;
+    float offset = std::sin(timeValue) * 0.5f;
+
+    int colorLoc = glGetUniformLocation(shaderProgram, "uniformColor");
+    int offsetLoc = glGetUniformLocation(shaderProgram, "hOffset");
+    int useLoc = glGetUniformLocation(shaderProgram, "useUniform");
+
+    glUniform4f(colorLoc, 0.0f, greenValue, 0.0f, 1.0f);
+    glUniform1f(offsetLoc, offset);
+    glUniform1i(useLoc, 0);   
+
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glDrawArrays(GL_TRIANGLES, 0, 3); 
 
     SDL_GL_SwapWindow(window);
   }
@@ -144,4 +155,5 @@ int main(int argc, char *argv[]) {
   SDL_DestroyWindow(window);
   SDL_Quit();
   return 0;
+
 }
