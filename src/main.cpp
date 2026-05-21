@@ -14,9 +14,9 @@ int SRC_HEIGHT = 600;
 
 
 float vertices[] = {
-     0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   
-    -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   
-     0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f   
+     0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f, 1.0f, 0.0f,   
+    -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f, 0.0f,  
+     0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f, 0.5f, 1.0f 
 }; 
 
 unsigned int indices[]= {
@@ -73,6 +73,32 @@ unsigned int createShaderProgram(std::string vertexPath, std::string fragmentPat
     return program;
 }
 
+unsigned int loadTexture(const char* path, GLenum format){
+  unsigned int texture;
+  glGenTextures(1,&texture);
+  glBindTexture(GL_TEXTURE_2D, texture);
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  int width;
+  int height;
+  int nrChannels;
+
+  unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0);
+  if(data){
+    glTexImage2D(GL_TEXTURE_2D,0, GL_RGB, width, height, 0 ,format, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+  }
+  else{
+    std::cout << "Failed to load texture: " << path << std::endl;
+  }
+  stbi_image_free(data);
+  return texture;
+}
+
 int main(int argc, char *argv[]) {
   SDL_Init(SDL_INIT_VIDEO);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -92,6 +118,7 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
+  stbi_set_flip_vertically_on_load(true);
   unsigned int shaderProgram = createShaderProgram("shaders/triangle.vert","shaders/triangle.frag");
 
   unsigned int VBO;
@@ -105,14 +132,25 @@ int main(int argc, char *argv[]) {
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0,3,GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*) 0);
+  glVertexAttribPointer(0,3,GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*) 0);
   glEnableVertexAttribArray(0);
 
-  glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+  glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
   glEnableVertexAttribArray(1);
+
+  glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+  glEnableVertexAttribArray(2);
+
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
+
+  unsigned int tex1 = loadTexture(argv[1], GL_RGB);
+
+  glUseProgram(shaderProgram);
+  glUniform1i(glGetUniformLocation(shaderProgram, "tex1"), 0);
+  glUniform1i(glGetUniformLocation(shaderProgram, "tex2"), 1);
+
   bool close = false;
 
   while (!close) {
@@ -144,6 +182,9 @@ int main(int argc, char *argv[]) {
     glUniform4f(colorLoc, 0.0f, greenValue, 0.0f, 1.0f);
     glUniform1f(offsetLoc, offset);
     glUniform1i(useLoc, 0);   
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex1);
 
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 3); 
