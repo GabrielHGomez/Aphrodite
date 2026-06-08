@@ -99,17 +99,25 @@ unsigned int loadTexture(const char* path, GLenum format){
   return texture;
 }
 
+void usage(){
+  std::cout << "Usage: /gl_image_viewer /path/to/image/" << std::endl;
+}
 int main(int argc, char *argv[]) {
-  SDL_Init(SDL_INIT_VIDEO);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+  if(argc < 2){
+    usage();
+    return 0;
+  }
+  //SDL_Init(SDL_INIT_VIDEO);
+  //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+  //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+  //SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-  SDL_Window *window = SDL_CreateWindow(
-      "LearnOpenGL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SRC_WIDTH,
-      SRC_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+  //SDL_Window *window = SDL_CreateWindow(
+  //   "LearnOpenGL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SRC_WIDTH,
+  //    SRC_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 
-  SDL_GLContext ctx = SDL_GL_CreateContext(window);
+  //
+  //DL_GLContext ctx = SDL_GL_CreateContext(window);
 
   if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
     SDL_GL_DeleteContext(ctx);
