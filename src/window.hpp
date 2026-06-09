@@ -6,8 +6,8 @@
 #include <glad/glad.h>
 
 //should I make this user inputted? I dont know
-int SRC_WIDTH = 800;
-int SRC_HEIGHT = 600;
+//int SRC_WIDTH = 800;
+//int SRC_HEIGHT = 600;
 
 class Window{
 public:
