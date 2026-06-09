@@ -34,3 +34,18 @@ Window::~Window(){
   std::cout << "Window Deconstructor called" << std::endl;
   SDL_DestroyWindow(window_);
 }
+
+void Window::pollEvents(){
+  SDL_Event event;
+
+  while(SDL_PollEvent(&event)){
+    if(event.type == SDL_QUIT){
+      close_ = true;
+    }
+    else if(event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED){
+      width_ = event.window.data1;
+      height_ = event.window.data2;
+      glViewport(0,0,width_,height_);
+    }
+  }
+}

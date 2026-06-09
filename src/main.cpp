@@ -13,13 +13,6 @@
 int SRC_WIDTH = 800;
 int SRC_HEIGHT = 600;
 
-
-float vertices[] = {
-     0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f, 1.0f, 0.0f,   
-    -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f, 0.0f,  
-     0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f, 0.5f, 1.0f 
-}; 
-
 unsigned int indices[]= {
   0, 1, 3,
   1, 2, 3
@@ -108,72 +101,15 @@ int main(int argc, char *argv[]) {
     usage();
     return 0;
   }
-  //SDL_Init(SDL_INIT_VIDEO);
-  //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-  //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-  //SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-
-  //SDL_Window *window = SDL_CreateWindow(
-  //   "LearnOpenGL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SRC_WIDTH,
-  //    SRC_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
-
-  //
-  //DL_GLContext ctx = SDL_GL_CreateContext(window);
-
-  //if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
-  //  SDL_GL_DeleteContext(ctx);
-  //  SDL_DestroyWindow(window);
-  //  SDL_Quit();
-  //  return -1;
-  //}
-
 //  stbi_set_flip_vertically_on_load(true);
 //  unsigned int shaderProgram = createShaderProgram("shaders/triangle.vert","shaders/triangle.frag");
 //
-//  unsigned int VBO;
-//  unsigned int VAO;
-//
-//  glGenVertexArrays(1,&VAO);
-//  glGenBuffers(1, &VBO);
-//
-//  glBindVertexArray(VAO);
-//
-//  glBindBuffer(GL_ARRAY_BUFFER, VBO);
-//  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-//
-//  glVertexAttribPointer(0,3,GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*) 0);
-//  glEnableVertexAttribArray(0);
-//
-//  glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-//  glEnableVertexAttribArray(1);
-//
-//  glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-//  glEnableVertexAttribArray(2);
-//
-//
-//  glBindBuffer(GL_ARRAY_BUFFER, 0);
-//  glBindVertexArray(0);
-//
-//  unsigned int tex1 = loadTexture(argv[1], GL_RGB);
 //
 //  glUseProgram(shaderProgram);
 //  glUniform1i(glGetUniformLocation(shaderProgram, "tex1"), 0);
 //  glUniform1i(glGetUniformLocation(shaderProgram, "tex2"), 1);
 //
-//  bool close = false;
 //
-//  while (!close) {
-//    SDL_Event event;
-//
-//    while (SDL_PollEvent(&event)) {
-//      if (event.type == SDL_QUIT) {
-//        close = true;
-//      } else if (event.type == SDL_WINDOWEVENT &&
-//                 event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
-//        glViewport(0, 0, event.window.data1, event.window.data2);
-//      }
-//    }
-//    processInput(close);
 //
 //    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 //    glClear(GL_COLOR_BUFFER_BIT);
@@ -205,6 +141,10 @@ int main(int argc, char *argv[]) {
 //  //SDL_DestroyWindow(window);
 //  SDL_Quit();
   Window window("User_Window",SRC_WIDTH,SRC_HEIGHT);
+
+  while(!window.close()){
+    window.pollEvents();
+  }
   return 0;
 
 }
