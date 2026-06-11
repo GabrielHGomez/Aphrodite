@@ -13,7 +13,8 @@ target_include_directories(glad PUBLIC external/include)
 add_executable(gl_image_viewer 
 	src/main.cpp
 	src/window.cpp
-	src/canvas.cpp)
+	src/canvas.cpp
+	src/texture.cpp)
 
 
 target_include_directories(gl_image_viewer PRIVATE

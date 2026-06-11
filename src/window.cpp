@@ -1,4 +1,4 @@
-#include "window.hpp"
+#include "../include/window.hpp"
 #include <stdexcept>
 
 Window::Window(std::string_view title, int width, int height): title_(title), width_(width), height_(height) {

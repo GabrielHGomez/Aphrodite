@@ -1,4 +1,4 @@
-#include "canvas.hpp"
+#include "../include/canvas.hpp"
 
 float vertices[] = 
 {

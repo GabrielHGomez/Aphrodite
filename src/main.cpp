@@ -1,14 +1,15 @@
 #include <SDL2/SDL.h>
 #include <glad/glad.h>
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+//#define STB_IMAGE_IMPLEMENTATION
+//#include "stb_image.h"
 
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <cmath>
-#include "window.hpp"
+#include "../include/window.hpp"
+#include "../include/texture.hpp"
 
 int SRC_WIDTH = 800;
 int SRC_HEIGHT = 600;
@@ -67,31 +68,31 @@ unsigned int createShaderProgram(std::string vertexPath, std::string fragmentPat
     return program;
 }
 
-unsigned int loadTexture(const char* path, GLenum format){
-  unsigned int texture;
-  glGenTextures(1,&texture);
-  glBindTexture(GL_TEXTURE_2D, texture);
-
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-  int width;
-  int height;
-  int nrChannels;
-
-  unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0);
-  if(data){
-    glTexImage2D(GL_TEXTURE_2D,0, GL_RGB, width, height, 0 ,format, GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-  }
-  else{
-    std::cout << "Failed to load texture: " << path << std::endl;
-  }
-  stbi_image_free(data);
-  return texture;
-}
+//unsigned int loadTexture(const char* path, GLenum format){
+//  unsigned int texture;
+//  glGenTextures(1,&texture);
+//  glBindTexture(GL_TEXTURE_2D, texture);
+//
+//  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+//  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+//  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+//  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//
+//  int width;
+//  int height;
+//  int nrChannels;
+//
+//  //unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0);
+//  if(data){
+//    glTexImage2D(GL_TEXTURE_2D,0, GL_RGB, width, height, 0 ,format, GL_UNSIGNED_BYTE, data);
+//    glGenerateMipmap(GL_TEXTURE_2D);
+//  }
+//  else{
+//    std::cout << "Failed to load texture: " << path << std::endl;
+//  }
+//  stbi_image_free(data);
+//  return texture;
+//}
 
 void usage(){
   std::cout << "Usage: /gl_image_viewer /path/to/image/" << std::endl;
@@ -141,7 +142,9 @@ int main(int argc, char *argv[]) {
 //  //SDL_DestroyWindow(window);
 //  SDL_Quit();
   Window window("User_Window",SRC_WIDTH,SRC_HEIGHT);
-
+  texture texture(argv[1]);
+  texture.bind();
+  
   while(!window.close()){
     window.pollEvents();
   }
