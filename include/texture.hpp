@@ -6,7 +6,7 @@ class texture{
 public:
   texture(std::string_view);
   ~texture();
-  void bind();
+  void bind(unsigned int id);
   int width() const {return width_;}
   int height() const {return height_;}
   int channels() const {return channels_;}

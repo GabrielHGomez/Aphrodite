@@ -30,3 +30,12 @@ canvas::canvas(){
  
   vertextCount_ = 6; 
 }
+canvas::~canvas(){
+  std::cout << "deleted canvas" << std::endl;
+}
+
+void canvas::draw() const {
+  glBindVertexArray(vao_);
+  glDrawArrays(GL_TRIANGLES, 0 , vertextCount_);
+  glBindVertexArray(0);
+}

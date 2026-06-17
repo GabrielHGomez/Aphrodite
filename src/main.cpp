@@ -10,6 +10,7 @@
 #include <cmath>
 #include "../include/window.hpp"
 #include "../include/texture.hpp"
+#include "../include/canvas.hpp"
 
 int SRC_WIDTH = 800;
 int SRC_HEIGHT = 600;
@@ -143,7 +144,10 @@ int main(int argc, char *argv[]) {
 //  SDL_Quit();
   Window window("User_Window",SRC_WIDTH,SRC_HEIGHT);
   texture texture(argv[1]);
-  texture.bind();
+  texture.bind(0);
+
+  canvas Canvas;
+  Canvas.draw();
   
   while(!window.close()){
     window.pollEvents();

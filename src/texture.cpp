@@ -50,7 +50,7 @@ texture::~texture(){
   glDeleteTextures(1,&texture_);
 }
 
-void texture::bind(){
-  glActiveTexture(GL_TEXTURE0);
+void texture::bind(unsigned int id){
+  glActiveTexture(GL_TEXTURE0 + id);
   glBindTexture(GL_TEXTURE_2D, texture_);
 }
