@@ -29,6 +29,7 @@ canvas::canvas(){
   glBindBuffer(GL_ARRAY_BUFFER, 0);
  
   vertextCount_ = 6; 
+
 }
 canvas::~canvas(){
   std::cout << "deleted canvas" << std::endl;

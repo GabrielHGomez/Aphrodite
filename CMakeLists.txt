@@ -14,7 +14,9 @@ add_executable(gl_image_viewer
 	src/main.cpp
 	src/window.cpp
 	src/canvas.cpp
-	src/texture.cpp)
+	src/texture.cpp
+	src/shader.cpp
+	src/GLContext.cpp)
 
 
 target_include_directories(gl_image_viewer PRIVATE
@@ -26,3 +28,11 @@ target_link_libraries(gl_image_viewer PRIVATE
 	glad
 	${CMAKE_DL_LIBS})
 
+add_custom_command(
+  TARGET gl_image_viewer
+  POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${CMAKE_CURRENT_SOURCE_DIR}/shaders"
+    "$<TARGET_FILE_DIR:gl_image_viewer>/shaders"
+    COMMENT "Copying shader directory to build directory..."
+)

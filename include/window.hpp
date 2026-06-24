@@ -20,6 +20,7 @@ public:
   bool close() const {return close_;}
 
   void pollEvents();
+  void swapBuffer() const;
 
 private:
   SDL_Window* window_ = nullptr;

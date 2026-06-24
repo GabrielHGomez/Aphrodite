@@ -1,6 +1,6 @@
 #pragma once
 #include <string_view>
-
+#include <glad/glad.h>
 class shader{
 public:
   shader(std::string_view vertSrc, std::string_view fragSrc);

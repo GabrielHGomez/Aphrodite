@@ -11,7 +11,6 @@ Window::Window(std::string_view title, int width, int height): title_(title), wi
     "LearnOpenGL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width_,
     height_, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 
-  SDL_GLContext ctx = SDL_GL_CreateContext(window_); 
   if(!window_){
     throw std::runtime_error("Window Creation failed");
   } 
@@ -23,7 +22,7 @@ Window::Window(std::string_view title, int width, int height): title_(title), wi
   } 
 
   if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
-    SDL_GL_DeleteContext(ctx);
+    SDL_GL_DeleteContext(ctx_);
     SDL_DestroyWindow(window_);
     SDL_Quit();
     throw std::runtime_error("Failed to load glad");
@@ -35,17 +34,44 @@ Window::~Window(){
   SDL_DestroyWindow(window_);
 }
 
+void Window::swapBuffer() const {SDL_GL_SwapWindow(window_);}
+
 void Window::pollEvents(){
   SDL_Event event;
 
   while(SDL_PollEvent(&event)){
-    if(event.type == SDL_QUIT){
-      close_ = true;
+    switch (event.type){
+      case SDL_QUIT:
+	close_ = true;
+	break;
+      case SDL_WINDOWEVENT:
+	if(event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED){
+          width_ = event.window.data1;
+          height_ = event.window.data2;
+          glViewport(0,0,width_,height_);
+	}
+//      case SDL_DROPFILE:
+//	char* dropped_file_dir = event.drop.file;
+
+	//if(dropped_file_dir){
+	//  std::string dropped = dropped_file_dir;
+	//std::cout << "File dropped: " << dropped << std::endl;
+	//}
+	//SDL_free(event.drop.file);
+
+	//break;
+
     }
-    else if(event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED){
-      width_ = event.window.data1;
-      height_ = event.window.data2;
-      glViewport(0,0,width_,height_);
-    }
+    //if(event.type == SDL_QUIT){
+    //  close_ = true;
+    //}
+    //else if(event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED){
+    //  width_ = event.window.data1;
+    //  height_ = event.window.data2;
+    //  glViewport(0,0,width_,height_);
+    //}
+    //if(SDL_DROPFILE){
+    //    std::cout << event.drop.file << std::endl;
+    //}
   }
 }

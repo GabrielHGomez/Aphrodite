@@ -10,7 +10,7 @@ texture::texture(std::string_view path){
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
   stbi_set_flip_vertically_on_load(true);
@@ -29,7 +29,7 @@ texture::texture(std::string_view path){
   channels_ = c;
   //have to chack format since this should work for different cases
   GLenum format = GL_RGB;
-  if(c = 1 && c == 2){
+  if(c == 1 || c == 2){
     format = GL_RED;
   }
   else if(c == 3){
