@@ -1,8 +1,8 @@
 #include "../include/GLContext.hpp"
 
-GLctx::GLctx(std::string_view title, int width, int height):window_(title,width,height),shader_("./shaders/triangle.vert","./shaders/triangle.frag"){
+GLctx::GLctx(std::string_view title, int width, int height, std::string_view type):window_(title,width,height),shader_("./shaders/triangle.vert",type){
 
-  glClearColor(1.0f,0.0f, 1.0f, 1.0f);
+  glClearColor(0.1f,0.0f, 0.2f, 1.0f);
 }
 void GLctx::loadImage(std::string_view path){
   texture_.emplace(path);

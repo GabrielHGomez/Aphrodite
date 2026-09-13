@@ -25,8 +25,8 @@ int main(int argc, char *argv[]) {
     usage();
     return 0;
   }
-
-  GLctx application("Test", SRC_WIDTH, SRC_HEIGHT);
+  auto type = argv[2];
+  GLctx application("Test", SRC_WIDTH, SRC_HEIGHT,type);
   application.loadImage(argv[1]);
   
   application.run();

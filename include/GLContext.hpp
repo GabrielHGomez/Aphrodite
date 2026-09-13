@@ -10,7 +10,7 @@
 //i dont like how openGLctx looks TODO::Change this to something more meaningful
 class GLctx{
 public:
-  GLctx(std::string_view title, int width, int height);
+  GLctx(std::string_view title, int width, int height,std::string_view type);
   void loadImage(std::string_view path);
   void run();
   void render();

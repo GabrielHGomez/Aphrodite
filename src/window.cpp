@@ -50,28 +50,18 @@ void Window::pollEvents(){
           height_ = event.window.data2;
           glViewport(0,0,width_,height_);
 	}
-//      case SDL_DROPFILE:
-//	char* dropped_file_dir = event.drop.file;
+	break;
+      case SDL_DROPFILE:{
+	char* dropped_file_dir = event.drop.file;
 
-	//if(dropped_file_dir){
-	//  std::string dropped = dropped_file_dir;
-	//std::cout << "File dropped: " << dropped << std::endl;
-	//}
-	//SDL_free(event.drop.file);
+	if(dropped_file_dir){
+	  std::string dropped = dropped_file_dir;
+	  std::cout << "File dropped: " << dropped << std::endl;
+	}
 
-	//break;
+	break;
+    }
 
     }
-    //if(event.type == SDL_QUIT){
-    //  close_ = true;
-    //}
-    //else if(event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED){
-    //  width_ = event.window.data1;
-    //  height_ = event.window.data2;
-    //  glViewport(0,0,width_,height_);
-    //}
-    //if(SDL_DROPFILE){
-    //    std::cout << event.drop.file << std::endl;
-    //}
   }
 }
